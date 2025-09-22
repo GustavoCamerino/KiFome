@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Meus endereços</h1>
+  <form method="post" class="grid">
+    <input name="apelido" placeholder="Apelido (opcional)" />
+    <input name="logradouro" placeholder="Logradouro" required />
+    <input name="numero" placeholder="Número" required />
+    <input name="bairro" placeholder="Bairro" required />
+    <input name="cidade" placeholder="Cidade" required />
+    <input name="uf" placeholder="UF" required />
+    <input name="cep" placeholder="CEP" required />
+    <input name="complemento" placeholder="Complemento (opcional)" />
+    <button class="btn" type="submit">Adicionar</button>
+  </form>
+  <ul>
+    {% for e in enderecos %}
+      <li>
+        {{ e.apelido or e.logradouro }} — {{ e.cidade }}/{{ e.uf }}
+        <form method="post" action="/cliente/enderecos/{{ e.id }}/delete" style="display:inline">
+          <button class="btn" type="submit">Excluir</button>
+        </form>
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
+

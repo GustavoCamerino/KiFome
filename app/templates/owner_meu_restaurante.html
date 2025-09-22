@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Meu restaurante</h1>
+  <form method="post" class="grid">
+    <input name="nome" placeholder="Nome" value="{{ restaurante.nome if restaurante }}" required />
+    <input name="endereco" placeholder="Endereço" value="{{ restaurante.endereco if restaurante }}" required />
+    <input name="telefone" placeholder="Telefone" value="{{ restaurante.telefone if restaurante }}" required />
+    <input name="tipo_culinaria" placeholder="Tipo de culinária" value="{{ restaurante.tipo_culinaria if restaurante }}" required />
+    <button class="btn" type="submit">Salvar</button>
+  </form>
+{% endblock %}
+

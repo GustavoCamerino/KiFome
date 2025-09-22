@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Área do Restaurante</h1>
+  {% if restaurante %}
+    <p>{{ restaurante.nome }} — {{ restaurante.tipo_culinaria }}</p>
+  {% else %}
+    <p>Cadastre seu restaurante para começar.</p>
+  {% endif %}
+  <nav class="tabs">
+    <a class="btn" href="/restaurante/meu">Meu restaurante</a>
+    <a class="btn" href="/restaurante/horarios">Horários</a>
+    <a class="btn" href="/restaurante/categorias">Categorias</a>
+    <a class="btn" href="/restaurante/pratos">Pratos</a>
+    <a class="btn" href="/restaurante/pedidos">Pedidos</a>
+    <a class="btn" href="/restaurante/relatorios">Relatórios</a>
+  </nav>
+  <div class="grid">
+    <div>
+      <h3>Vendas</h3>
+      <div>Total vendido: R$ {{ '%.2f'|format(vendas) }}</div>
+      <div>Taxa empresa (3%): R$ {{ '%.2f'|format(taxa) }}</div>
+      <div>Ticket médio: R$ {{ '%.2f'|format(ticket) }}</div>
+    </div>
+  </div>
+{% endblock %}
+

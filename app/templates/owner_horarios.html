@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Horários de funcionamento</h1>
+  <form method="post" class="grid">
+    <select name="dia_semana" required>
+      {% for d in ['Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'] %}
+        <option value="{{ d }}">{{ d }}</option>
+      {% endfor %}
+    </select>
+    <input type="time" name="horario_abertura" required />
+    <input type="time" name="horario_fechamento" required />
+    <button class="btn" type="submit">Salvar</button>
+  </form>
+  <ul>
+    {% for h in horarios %}
+      <li>{{ h.dia_semana }}: {{ h.horario_abertura }} - {{ h.horario_fechamento }}</li>
+    {% endfor %}
+  </ul>
+{% endblock %}
+

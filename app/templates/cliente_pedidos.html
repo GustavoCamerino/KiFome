@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Meus pedidos</h1>
+  <div class="cards">
+    {% for p in pedidos %}
+      <div class="card status-{{ p.status }}">
+        <div>Pedido #{{ p.id }}</div>
+        <div>Status: <strong>{{ p.status }}</strong></div>
+        <div>Total R$ {{ '%.2f'|format(p.valor_total) }}</div>
+        <a class="btn" href="/cliente/pedidos/{{ p.id }}">Detalhes</a>
+      </div>
+    {% else %}
+      <p>Sem pedidos.</p>
+    {% endfor %}
+  </div>
+{% endblock %}
+

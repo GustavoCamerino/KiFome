@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>Pedidos recebidos</h1>
+  <div class="cards">
+    {% for p in pedidos %}
+      <div class="card">
+        <div>#{{ p.id }} — {{ p.status }} — R$ {{ '%.2f'|format(p.valor_total) }}</div>
+        <form class="advance-status" data-id="{{ p.id }}" method="post" action="/restaurante/pedidos/{{ p.id }}/status">
+          {% if p.status == 'preparacao' %}
+            <input type="hidden" name="status" value="transito" />
+            <button class="btn" type="submit">Marcar em trânsito</button>
+            <button class="btn" type="submit" onclick="this.form.status.value='cancelado'">Cancelar</button>
+          {% elif p.status == 'transito' %}
+            <input type="hidden" name="status" value="entregue" />
+            <button class="btn" type="submit">Marcar entregue</button>
+          {% else %}
+            <span>Finalizado</span>
+          {% endif %}
+        </form>
+      </div>
+    {% else %}
+      <p>Sem pedidos.</p>
+    {% endfor %}
+  </div>
+{% endblock %}
+

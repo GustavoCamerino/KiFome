@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h1>{{ restaurante.nome }}</h1>
+  <p>{{ restaurante.tipo_culinaria }} • Nota {{ restaurante.nota_media }}</p>
+  <div class="grid">
+    <div>
+      <h3>Cardápio</h3>
+      {% for p in pratos %}
+        <div class="row">
+          <div class="flex-1">
+            <strong>{{ p.nome }}</strong>
+            <div>{{ p.descricao }}</div>
+            <div>R$ {{ '%.2f'|format(p.preco) }}</div>
+            {% if not p.disponivel or p.estoque == 0 %}
+              <button class="btn" disabled title="Indisponível ou sem estoque">Indisponível</button>
+            {% else %}
+              <button class="btn add-to-cart" data-id="{{ p.id }}">Adicionar ao carrinho</button>
+            {% endif %}
+          </div>
+          <div class="badge">Estoque: {{ p.estoque }}</div>
+        </div>
+      {% endfor %}
+    </div>
+    <aside>
+      <a class="btn" href="/carrinho">Ver carrinho</a>
+    </aside>
+  </div>
+  <h3>Avaliações</h3>
+  {% for a in avaliacoes %}
+    <div class="card">
+      <strong>Nota {{ a.nota }}</strong>
+      <div>{{ a.feedback }}</div>
+    </div>
+  {% else %}
+    <p>Sem avaliações ainda.</p>
+  {% endfor %}
+{% endblock %}
+
