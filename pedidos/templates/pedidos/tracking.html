@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id="tracking-root" data-pedido-id="{{ pedido.id_pedido }}" data-status="{{ pedido.status }}"></div>
+<h1>Acompanhamento do Pedido #{{ pedido.id_pedido }}</h1>
+<p>Restaurante: {{ pedido.restaurante.nome }}</p>
+
+<div class="steps mt-2">
+  <div class="step {% if pedido.status != 'pendente' %}active{% endif %}
+  ">
+    <div class="dot"></div>
+    <div class="label">Preparação</div>
+    <div class="bar"></div>
+  </div>
+  <div class="step {% if pedido.status == 'transito' or pedido.status == 'entregue' %}active{% endif %}">
+    <div class="dot"></div>
+    <div class="label">Trânsito</div>
+    <div class="bar"></div>
+  </div>
+  <div class="step {% if pedido.status == 'entregue' %}active{% endif %}">
+    <div class="dot"></div>
+    <div class="label">Entregue</div>
+  </div>
+  </div>
+
+<div class="panel">
+  <p>Status atual: <strong>{{ pedido.get_status_display }}</strong></p>
+  <p>Total pago: R$ {{ pedido.valor_total }} — Comissão (3%): R$ {{ pedido.comissao_plataforma }}</p>
+</div>
+
+<h3 class="mt-3">Itens</h3>
+<div class="panel">
+  {% for item in pedido.itens.all %}
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #102544;gap:12px;align-items:center;">
+      <div style="display:flex;gap:10px;align-items:center;">
+        {% if item.prato.foto %}
+          <img class="thumb" src="{{ item.prato.foto.url }}" alt="{{ item.prato.nome }}" />
+        {% else %}
+          <img class="thumb" src="/static/img/placeholder.svg" alt="{{ item.prato.nome }}" />
+        {% endif %}
+        <div>{{ item.quantidade }}x {{ item.prato.nome }}</div>
+      </div>
+      <div>R$ {{ item.preco_unitario }}</div>
+    </div>
+  {% endfor %}
+</div>
+
+{% if pedido.status != 'entregue' and pedido.status != 'cancelado' %}
+  {% if is_restaurant_owner %}
+    <form class="mt-2" method="post" action="/pedidos/pedido/{{ pedido.id_pedido }}/avancar/">
+      {% csrf_token %}
+      {% if pedido.status == 'pendente' %}
+        <button type="submit">Em preparo</button>
+      {% elif pedido.status == 'preparacao' %}
+        <button type="submit">Finalizado (enviar)</button>
+      {% elif pedido.status == 'transito' %}
+        <span class="badge">Aguardando confirmação do cliente</span>
+      {% endif %}
+    </form>
+  {% endif %}
+  {% if is_cliente_owner %}
+    <p class="mt-1">
+      <a class="btn danger" href="/pedidos/pedido/{{ pedido.id_pedido }}/cancelar/">Cancelar pedido</a>
+    </p>
+    {% if pedido.status == 'transito' %}
+      <form class="mt-1" method="post" action="/pedidos/pedido/{{ pedido.id_pedido }}/recebido/">
+        {% csrf_token %}
+        <button type="submit">Pedido recebido</button>
+      </form>
+    {% endif %}
+  {% endif %}
+{% else %}
+  {% if pedido.status == 'entregue' %}
+    <p class="mt-2">Pedido concluído. Bom apetite! 🍽️</p>
+  {% else %}
+    <p class="mt-2">Pedido cancelado.</p>
+  {% endif %}
+{% endif %}
+
+{% endblock %}

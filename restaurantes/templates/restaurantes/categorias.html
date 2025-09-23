@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Categorias de pratos</h1>
+<div class="panel form-card mt-2">
+  <h3>Criar nova categoria</h3>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="actions">
+      <button type="submit">Criar</button>
+      <a class="btn secondary" href="/restaurantes/dashboard/">Voltar</a>
+    </div>
+  </form>
+  {% if mensagem %}<p class="mt-1">{{ mensagem }}</p>{% endif %}
+</div>
+
+<h3 class="mt-3">Categorias disponíveis</h3>
+<div class="panel mt-1">
+  {% for cat in todas_categorias %}
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #102544">
+      <div>{{ cat.nome_categoria }}</div>
+      {% if cat.nome_categoria in categorias_usadas %}
+        <span class="badge">usada na sua loja</span>
+      {% endif %}
+    </div>
+  {% empty %}
+  <div>Nenhuma categoria cadastrada ainda.</div>
+  {% endfor %}
+</div>
+{% endblock %}
+

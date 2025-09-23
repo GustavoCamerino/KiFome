@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Finalizar Pedido</h1>
+<div class="panel mt-2">
+  <h3>Itens</h3>
+  {% for p, qty in items %}
+    <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #102544;gap:10px;align-items:center;">
+      <div style="display:flex;gap:10px;align-items:center;">
+        {% if p.foto %}
+          <img class="thumb" src="{{ p.foto.url }}" alt="{{ p.nome }}" />
+        {% else %}
+          <img class="thumb" src="/static/img/placeholder.svg" alt="{{ p.nome }}" />
+        {% endif %}
+        <div>{{ qty }}x {{ p.nome }}</div>
+      </div>
+      <div>R$ {{ p.preco|floatformat:2 }}</div>
+    </div>
+  {% endfor %}
+  <div style="text-align:right;margin-top:8px"><strong>Total: R$ {{ total|floatformat:2 }}</strong></div>
+</div>
+
+<div class="panel form-card mt-2">
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="actions">
+      <button type="submit">Confirmar pedido (simulado)</button>
+      <a class="btn secondary" href="/pedidos/carrinho/">Voltar ao carrinho</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h1>{{ restaurante.nome }}</h1>
+<p class="mt-1"><span class="badge">{{ restaurante.tipo_culinaria|default:"Geral" }}</span> • {{ restaurante.endereco }} • {{ restaurante.telefone }}</p>
+
+<h3 class="mt-3">Menu</h3>
+{% for cat, pratos in pratos_por_cat %}
+  <h4 class="mt-2">{{ cat.nome_categoria }}</h4>
+  <div class="cards">
+    {% for p in pratos %}
+      <div class="card">
+        <img class="img-product" loading="lazy"
+             src="{% if p.foto %}{{ p.foto.url }}{% else %}{% static 'img/placeholder.svg' %}{% endif %}"
+             alt="{{ p.nome }}" />
+        <h3>{{ p.nome }}</h3>
+        <p>{{ p.descricao }}</p>
+        <p><strong>R$ {{ p.preco }}</strong> {% if p.estoque > 0 %}<span class="badge">Estoque: {{ p.estoque }}</span>{% endif %}</p>
+        {% if p.disponibilidade and p.estoque > 0 %}
+          {% if user.is_authenticated and user.cliente %}
+            <div class="mt-1" style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+              <input type="number" class="qty-input" min="1" max="{{ p.estoque }}" value="1" style="width:72px" aria-label="Quantidade de {{ p.nome }}" />
+              <a class="btn js-add-to-cart" href="/pedidos/carrinho/add/{{ p.id_prato }}/" data-prato-id="{{ p.id_prato }}">Adicionar</a>
+              <a class="btn secondary js-buy-now" href="/pedidos/comprar/{{ p.id_prato }}/" data-prato-id="{{ p.id_prato }}">Comprar</a>
+            </div>
+          {% else %}
+            <span class="badge">Entre como cliente para comprar</span>
+          {% endif %}
+        {% else %}
+          <span class="badge" style="border-color:#7f1d1d;color:#fecaca;background:#3a0b0b;">Indisponível</span>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+{% empty %}
+  <p>Nenhum prato disponível.</p>
+{% endfor %}
+
+{% if user.is_authenticated and user.cliente %}
+  <p class="mt-3"><a class="btn secondary" href="/avaliacoes/{{ restaurante.id_restaurante }}/avaliar/">Avaliar restaurante</a></p>
+{% endif %}
+{% endblock %}

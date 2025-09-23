@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KiFome</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
+</head>
+<body>
+  <nav class="navbar" role="navigation" aria-label="Menu principal">
+    <a class="brand" href="/">KiFome</a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links" aria-label="Abrir menu">
+      ☰
+    </button>
+    <div id="nav-links" class="nav-links">
+      {% if user.is_authenticated %}
+        {# Links para CLIENTE #}
+        {% if user.cliente %}
+          <div class="nav-dropdown">
+            <a href="/" class="nav-dropbtn">Restaurantes</a>
+            <div class="nav-dropdown-content">
+              {% for r in nav_restaurantes %}
+                <a href="/restaurantes/{{ r.id_restaurante }}/">{{ r.nome }}</a>
+              {% endfor %}
+            </div>
+          </div>
+          <a href="/clientes/dashboard/">Meus Pedidos</a>
+          <a href="/pedidos/carrinho/">Carrinho <span id="cart-count" class="badge" style="margin-left:6px">0</span></a>
+          <a href="/clientes/perfil/">Perfil</a>
+        {% endif %}
+        {# Links para RESTAURANTE #}
+        {% if user.restaurante %}
+          <a href="/restaurantes/dashboard/">Minha loja</a>
+          <a href="/restaurantes/perfil/">Perfil</a>
+        {% endif %}
+        <a href="/accounts/logout/">Sair</a>
+      {% else %}
+        <a href="/accounts/login/">Entrar</a>
+        <a href="/clientes/signup/">Cadastro Cliente</a>
+        <a href="/restaurantes/signup/">Cadastro Restaurante</a>
+      {% endif %}
+    </div>
+  </nav>
+  <main class="container">
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+          <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>© {% now "Y" %} KiFome</span>
+      <span>Feito com Django</span>
+    </div>
+  </footer>
+  <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>

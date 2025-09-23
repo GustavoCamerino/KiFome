@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Entrar</h1>
+<div class="panel form-card mt-2">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="actions">
+      <button type="submit">Entrar</button>
+      <a class="btn secondary" href="/clientes/signup/">Sou cliente novo</a>
+      <a class="btn secondary" href="/restaurantes/signup/">Sou restaurante</a>
+    </div>
+    <p class="mt-1"><small>Dica: use o email como usuário.</small></p>
+  </form>
+  </div>
+{% endblock %}

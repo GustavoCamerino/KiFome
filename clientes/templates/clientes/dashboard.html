@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Olá, {{ cliente.nome_completo }}</h1>
+<h3 class="mt-2">Meus Pedidos</h3>
+<div class="panel mt-1">
+  {% for p in pedidos %}
+    <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #102544">
+      <div>Pedido #{{ p.id_pedido }} — {{ p.restaurante.nome }} — {{ p.get_status_display }}</div>
+      <div>
+        <strong>R$ {{ p.valor_total }}</strong>
+        <a class="btn link" href="/pedidos/pedido/{{ p.id_pedido }}/">acompanhar</a>
+      </div>
+    </div>
+  {% empty %}
+    <div>Você ainda não tem pedidos.</div>
+  {% endfor %}
+</div>
+{% endblock %}

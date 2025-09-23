@@ -1,8 +1,0 @@
-{% extends 'base.html' %}
-{% block content %}
-  <h1>Relatórios</h1>
-  <div>Total vendido: R$ {{ '%.2f'|format(total_vendido) }}</div>
-  <div>Taxa (3%): R$ {{ '%.2f'|format(total_taxa) }}</div>
-  <div>Ticket médio: R$ {{ '%.2f'|format(ticket_medio) }}</div>
-{% endblock %}
-

@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+{% block content %}
+<div id="dashboard-root"></div>
+<h1>Minha Loja — {{ restaurante.nome }}</h1>
+<div class="panel mt-2">
+  <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;justify-content:space-between;">
+    <div style="display:flex;gap:12px;align-items:center;">
+      {% if restaurante.foto %}
+        <img class="thumb" src="{{ restaurante.foto.url }}" alt="{{ restaurante.nome }}" />
+      {% else %}
+        <img class="thumb" src="/static/img/placeholder.svg" alt="{{ restaurante.nome }}" />
+      {% endif %}
+      <div>
+        <div><strong>Lucro (entregues):</strong> R$ <span id="lucro-valor">{{ lucro|floatformat:2 }}</span></div>
+        <small>Comissão da plataforma já descontada (3%).</small>
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <a class="btn" href="/restaurantes/prato/novo/">Novo item</a>
+      <a class="btn secondary" href="/restaurantes/categorias/">Gerenciar categorias</a>
+      <a class="btn secondary" href="/restaurantes/perfil/">Editar perfil</a>
+    </div>
+  </div>
+</div>
+
+<h3 class="mt-3">Seus itens</h3>
+<div class="mt-1">
+  <table>
+    <thead>
+      <tr><th>Foto</th><th>Item</th><th>Categoria</th><th>Preço</th><th>Disp.</th><th>Estoque</th><th>Ações</th></tr>
+    </thead>
+    <tbody>
+      {% for prato in pratos %}
+      <tr>
+        <td>
+          {% if prato.foto %}
+            <img class="thumb" src="{{ prato.foto.url }}" alt="{{ prato.nome }}" />
+          {% else %}
+            <img class="thumb" src="/static/img/placeholder.svg" alt="{{ prato.nome }}" />
+          {% endif %}
+        </td>
+        <td>{{ prato.nome }}</td>
+        <td>{{ prato.categoria }}</td>
+        <td>R$ {{ prato.preco }}</td>
+        <td>{{ prato.disponibilidade|yesno:"Sim,Não" }}</td>
+        <td>{{ prato.estoque }}</td>
+        <td>
+          <a class="btn link" href="/restaurantes/prato/{{ prato.id_prato }}/editar/">Editar</a>
+          <a class="btn link" href="/restaurantes/prato/{{ prato.id_prato }}/remover/">Remover</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7">Nenhum prato cadastrado.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h3 class="mt-3">Pedidos recentes</h3>
+<div id="pedidos-list" class="panel mt-1">
+  {% for p in pedidos %}
+    <div class="pedido" data-id="{{ p.id_pedido }}" style="padding:10px 0;border-bottom:1px solid #102544">
+      <div style="display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap;">
+        <div style="display:flex;gap:10px;align-items:center;">
+          {% if p.cliente.foto %}
+            <img class="avatar" src="{{ p.cliente.foto.url }}" alt="{{ p.cliente.nome_completo }}" />
+          {% else %}
+            <img class="avatar" src="/static/img/placeholder.svg" alt="{{ p.cliente.nome_completo }}" />
+          {% endif %}
+          <div>
+            <div><strong class="pid">#{{ p.id_pedido }}</strong> — <span class="cliente-nome">{{ p.cliente.nome_completo }}</span> — <span class="status">{{ p.get_status_display }}</span></div>
+            <small class="endereco">{{ p.endereco_entrega|default:"Sem endereço informado" }}</small>
+          </div>
+        </div>
+        <div><strong>R$ <span class="valor">{{ p.valor_total|floatformat:2 }}</span></strong></div>
+      </div>
+      <div class="mt-1 itens">
+        {% for it in p.itens.all %}
+          <div class="item">{{ it.quantidade }}x {{ it.prato.nome }}</div>
+        {% endfor %}
+      </div>
+      <div class="mt-1 acao">
+        {% if p.status == 'pendente' %}
+          <a class="btn avancar" href="/pedidos/pedido/{{ p.id_pedido }}/avancar/">Em preparo</a>
+        {% elif p.status == 'preparacao' %}
+          <a class="btn avancar" href="/pedidos/pedido/{{ p.id_pedido }}/avancar/">Finalizado (enviar)</a>
+        {% elif p.status == 'transito' %}
+          <span class="badge">Aguardando confirmação do cliente</span>
+        {% else %}
+          <span class="badge">{{ p.get_status_display }}</span>
+        {% endif %}
+      </div>
+    </div>
+  {% empty %}
+    <div class="empty">Sem pedidos ainda.</div>
+  {% endfor %}
+</div>
+{% endblock %}

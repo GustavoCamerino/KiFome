@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Avaliar {{ restaurante.nome }}</h1>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Enviar avaliação</button>
+  <a href="/restaurantes/{{ restaurante.id_restaurante }}/">Cancelar</a>
+</form>
+{% endblock %}
+

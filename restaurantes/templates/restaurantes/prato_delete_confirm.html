@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Remover item</h1>
+<div class="panel form-card mt-2">
+  <p>Tem certeza que deseja remover "{{ prato.nome }}"?</p>
+  <form method="post">
+    {% csrf_token %}
+    <div class="actions">
+      <button class="btn danger" type="submit">Confirmar</button>
+      <a class="btn secondary" href="/restaurantes/dashboard/">Cancelar</a>
+    </div>
+  </form>
+  </div>
+{% endblock %}

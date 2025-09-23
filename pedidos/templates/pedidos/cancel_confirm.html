@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Cancelar pedido</h1>
+<div class="panel form-card mt-2">
+  <p>Tem certeza que deseja cancelar o pedido #{{ pedido.id_pedido }}?</p>
+  <form method="post">
+    {% csrf_token %}
+    <div class="actions">
+      <button class="btn danger" type="submit">Cancelar pedido</button>
+      <a class="btn secondary" href="/pedidos/pedido/{{ pedido.id_pedido }}/">Voltar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+

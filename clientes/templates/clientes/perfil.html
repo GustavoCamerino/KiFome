@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Meu Perfil</h1>
+<div class="panel form-card mt-2">
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <div class="actions">
+      <button type="submit">Salvar</button>
+      <a class="btn secondary" href="/clientes/dashboard/">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
+

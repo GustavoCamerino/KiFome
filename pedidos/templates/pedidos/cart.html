@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Carrinho</h1>
+{% if items %}
+  <div class="panel mt-2">
+    {% for it in items %}
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #102544;gap:12px;">
+        <div style="display:flex;gap:12px;align-items:center;">
+          {% if it.prato.foto %}
+            <img class="thumb" src="{{ it.prato.foto.url }}" alt="{{ it.prato.nome }}" />
+          {% else %}
+            <img class="thumb" src="/static/img/placeholder.svg" alt="{{ it.prato.nome }}" />
+          {% endif %}
+          <div>
+            <div style="font-weight:600">{{ it.prato.nome }}</div>
+            <small class="muted">Quantidade: {{ it.quantidade }}</small>
+          </div>
+        </div>
+        <div>
+          <strong>R$ {{ it.subtotal }}</strong>
+          <a class="btn link" href="/pedidos/carrinho/remove/{{ it.prato.id_prato }}/">Remover</a>
+        </div>
+      </div>
+    {% endfor %}
+    <div style="display:flex;justify-content:flex-end;gap:16px;margin-top:12px">
+      <div><strong>Total:</strong> R$ {{ total }}</div>
+      <form method="post" action="/pedidos/checkout/">
+        {% csrf_token %}
+        <button type="submit">Finalizar pedido (simulado)</button>
+      </form>
+    </div>
+  </div>
+{% else %}
+  <p>Seu carrinho está vazio.</p>
+{% endif %}
+{% endblock %}
